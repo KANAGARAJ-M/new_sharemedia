@@ -1,5 +1,5 @@
 # SHARE MEDIA
-##Photo Sharing Platform for world wide users
+##### Photo Sharing Platform for world wide users
 
 A completely Responsive Instagram App- Works on Android.
 
@@ -75,5 +75,4 @@ flutter_launcher_icons: ^0.13.1
 ## Feedback
 
 If you have any feedback, please reach out to me at 
-
-##Mail - kanagarajm638@gmail.com
+#### Mail - kanagarajm638@gmail.com
