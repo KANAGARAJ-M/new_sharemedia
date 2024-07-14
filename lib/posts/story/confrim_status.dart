@@ -41,7 +41,7 @@ class _ConfirmStatusState extends State<ConfirmStatus> {
             child: TextFormField(
               style: TextStyle(
                 fontSize: 15.0,
-                color: Theme.of(context).textTheme.headline6!.color,
+                color: Theme.of(context).textTheme.headlineLarge!.color,
               ),
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(10.0),
@@ -49,7 +49,7 @@ class _ConfirmStatusState extends State<ConfirmStatus> {
                 border: InputBorder.none,
                 hintText: "Type your caption",
                 hintStyle: TextStyle(
-                  color: Theme.of(context).textTheme.headline6!.color,
+                  color: Theme.of(context).textTheme.headlineLarge!.color,
                 ),
               ),
               onSaved: (val) {

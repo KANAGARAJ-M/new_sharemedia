@@ -17,7 +17,8 @@ class Constants {
   static Color darkBG = Color(0xff2B2B2B);
 
   static ThemeData lightTheme = ThemeData(
-    backgroundColor: lightBG,
+    // backgroundColor: lightBG,
+    canvasColor: lightBG,
     primaryColor: lightPrimary,
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: lightAccent,
@@ -55,7 +56,8 @@ class Constants {
       secondary: darkAccent,
       brightness: Brightness.dark,
     ),
-    backgroundColor: darkBG,
+    // backgroundColor: darkBG,
+    canvasColor: darkBG,
     primaryColor: darkPrimary,
     scaffoldBackgroundColor: darkBG,
     textSelectionTheme: TextSelectionThemeData(

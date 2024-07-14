@@ -90,7 +90,7 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
                         style: TextStyle(
                           color: widget.isMe!
                               ? Colors.white
-                              : Theme.of(context).textTheme.headline6!.color,
+                              : Theme.of(context).textTheme.headlineLarge!.color,
                         ),
                       )
                     : CachedNetworkImage(
@@ -117,7 +117,7 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
             child: Text(
               timeago.format(widget.time!.toDate()),
               style: TextStyle(
-                color: Theme.of(context).textTheme.headline6!.color,
+                color: Theme.of(context).textTheme.headlineLarge!.color,
                 fontSize: 10.0,
               ),
             ),

@@ -88,7 +88,7 @@ class _CommentsState extends State<Comments> {
                             style: TextStyle(
                               fontSize: 15.0,
                               color:
-                                  Theme.of(context).textTheme.headline6!.color,
+                                  Theme.of(context).textTheme.headlineLarge!.color,
                             ),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10.0),
@@ -125,7 +125,7 @@ class _CommentsState extends State<Comments> {
                                 fontSize: 15.0,
                                 color: Theme.of(context)
                                     .textTheme
-                                    .headline6!
+                                    .headlineLarge!
                                     .color,
                               ),
                             ),
