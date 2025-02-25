@@ -1,4 +1,4 @@
 enum MessageType {
   TEXT,
-  IMAGE,
+  IMAGE, text,
 }

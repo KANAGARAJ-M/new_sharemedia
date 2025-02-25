@@ -411,29 +411,33 @@ class _ProfileState extends State<Profile> {
     bool isMe = widget.profileId == firebaseAuth.currentUser!.uid;
     if (isMe) {
       return buildButton(
-          text: "Edit Profile",
-          function: () {
-            Navigator.of(context).push(
-              CupertinoPageRoute(
-                builder: (_) => EditProfile(
-                  user: user,
-                ),
+        text: "Edit Profile",
+        function: () {
+          Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (_) => EditProfile(
+                user: user,
               ),
-            );
-          });
-      //if you are already following the user then "unfollow"
-    } else if (isFollowing) {
+            ),
+          );
+        }
+      );
+    }
+    //if you are already following the user then "unfollow"
+    if (isFollowing) {
       return buildButton(
         text: "Unfollow",
         function: handleUnfollow,
       );
-      //if you are not following the user then "follow"
-    } else if (!isFollowing) {
+    }
+    //if you are not following the user then "follow"  
+    if (!isFollowing) {
       return buildButton(
-        text: "Follow",
+        text: "Follow", 
         function: handleFollow,
       );
     }
+    return Container(); // Default case
   }
 
   buildButton({String? text, Function()? function}) {

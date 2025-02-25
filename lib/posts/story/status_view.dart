@@ -9,6 +9,7 @@ import 'package:new_sharemedia/view_models/status/status_view_model.dart';
 import 'package:new_sharemedia/widgets/indicators.dart';
 import 'package:story/story.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'dart:async';
 
 class StatusScreen extends StatefulWidget {
   final initPage;
@@ -30,15 +31,63 @@ class StatusScreen extends StatefulWidget {
 
 class _StatusScreenState extends State<StatusScreen> {
   @override
+  void initState() {
+    super.initState();
+    _checkAndDeleteExpiredStatus();
+  }
+
+  Future<void> _checkAndDeleteExpiredStatus() async {
+    try {
+      var statusesSnapshot = await statusRef
+          .doc(widget.statusId)
+          .collection('statuses')
+          .get();
+
+      for (var status in statusesSnapshot.docs) {
+        StatusModel statusModel = StatusModel.fromJson(status.data());
+        DateTime creationTime = statusModel.time!.toDate();
+        DateTime now = DateTime.now();
+        Duration difference = now.difference(creationTime);
+
+        // Delete if status is older than 24 hours
+        if (difference.inHours >= 24) {
+          await statusRef
+              .doc(widget.statusId)
+              .collection('statuses')
+              .doc(status.id)
+              .delete();
+          
+          // If this was the last status, delete the main status document
+          var remainingStatuses = await statusRef
+              .doc(widget.statusId)
+              .collection('statuses')
+              .get();
+          
+          if (remainingStatuses.docs.isEmpty) {
+            await statusRef.doc(widget.statusId).delete();
+          }
+        }
+      }
+    } catch (e) {
+      print('Error checking/deleting expired status: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    StatusViewModel viewModel = Provider.of<StatusViewModel>(context);
     return Scaffold(
       body: GestureDetector(
         onVerticalDragUpdate: (value) {
           Navigator.pop(context);
         },
         child: FutureBuilder<QuerySnapshot>(
-          future: statusRef.doc(widget.statusId).collection('statuses').get(),
+          future: statusRef
+              .doc(widget.statusId)
+              .collection('statuses')
+              .where('time', isGreaterThan: Timestamp.fromDate(
+                DateTime.now().subtract(Duration(hours: 24))
+              ))
+              .get(),
           builder: (context, snapshot) {
             List status = snapshot.data!.docs;
             return snapshot.connectionState == ConnectionState.waiting

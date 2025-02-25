@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:ionicons/ionicons.dart';
 import 'package:new_sharemedia/chats/recent_chats.dart';
 import 'package:new_sharemedia/models/post.dart';
@@ -15,18 +16,38 @@ class Feeds extends StatefulWidget {
   _FeedsState createState() => _FeedsState();
 }
 
-class _FeedsState extends State<Feeds> with AutomaticKeepAliveClientMixin{
+class _FeedsState extends State<Feeds> with AutomaticKeepAliveClientMixin {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   int page = 5;
   bool loadingMore = false;
-  ScrollController scrollController = ScrollController();
+  bool showStory = true;
+  ScrollController mainScrollController = ScrollController();
+  ScrollController listScrollController = ScrollController();
 
   @override
   void initState() {
-    scrollController.addListener(() async {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
+    mainScrollController.addListener(() {
+      // Check scroll direction and update story visibility
+      if (mainScrollController.position.userScrollDirection == ScrollDirection.reverse) {
+        if (showStory) {
+          setState(() {
+            showStory = false;
+          });
+        }
+      }
+      if (mainScrollController.position.userScrollDirection == ScrollDirection.forward) {
+        if (!showStory) {
+          setState(() {
+            showStory = true;
+          });
+        }
+      }
+    });
+
+    listScrollController.addListener(() {
+      // Pagination logic
+      if (listScrollController.position.pixels == listScrollController.position.maxScrollExtent) {
         setState(() {
           page = page + 5;
           loadingMore = true;
@@ -37,8 +58,15 @@ class _FeedsState extends State<Feeds> with AutomaticKeepAliveClientMixin{
   }
 
   @override
+  void dispose() {
+    mainScrollController.dispose();
+    listScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print('>>>');
+    super.build(context);
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -73,13 +101,16 @@ class _FeedsState extends State<Feeds> with AutomaticKeepAliveClientMixin{
         onRefresh: () =>
             postRef.orderBy('timestamp', descending: true).limit(page).get(),
         child: SingleChildScrollView(
-          // controller: scrollController,
-          physics: NeverScrollableScrollPhysics(),
+          controller: mainScrollController,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              StoryWidget(),
+              AnimatedContainer(
+                duration: Duration(milliseconds: 200),
+                height: showStory ? null : 0,
+                child: showStory ? StoryWidget() : Container(),
+              ),
               Container(
                 height: MediaQuery.of(context).size.height,
                 child: FutureBuilder(
@@ -92,7 +123,7 @@ class _FeedsState extends State<Feeds> with AutomaticKeepAliveClientMixin{
                       var snap = snapshot.data;
                       List docs = snap!.docs;
                       return ListView.builder(
-                        controller: scrollController,
+                        controller: listScrollController,
                         itemCount: docs.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
