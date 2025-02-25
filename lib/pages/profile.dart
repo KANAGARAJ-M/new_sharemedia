@@ -60,7 +60,13 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('ShareMedia'),
+        title: Text(
+          'ShareMedia',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20.0,
+          ),
+        ),
         actions: [
           widget.profileId == firebaseAuth.currentUser!.uid
               ? Center(
@@ -457,11 +463,22 @@ class _ProfileState extends State<Profile> {
                 Color(0xff597FDB),
               ],
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(0, 3),
+              ),
+            ],
           ),
           child: Center(
             child: Text(
               text!,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),

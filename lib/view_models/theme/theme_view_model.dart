@@ -1,20 +1,22 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  final String key = 'theme';
+  final String key = 'theme_mode';
   SharedPreferences? _prefs;
-  bool _darkTheme = false;
-  bool get dark => _darkTheme;
+  ThemeMode _themeMode = ThemeMode.system;
+  
+  ThemeMode get themeMode => _themeMode;
+  bool get isDark => _themeMode == ThemeMode.dark;
+  bool get isLight => _themeMode == ThemeMode.light;
+  bool get isSystem => _themeMode == ThemeMode.system;
 
-  AppProvider() {
-    _darkTheme = true;
-    _loadfromPrefs();
+  ThemeProvider() {
+    _loadFromPrefs();
   }
 
-  toggleTheme() {
-    _darkTheme = !_darkTheme;
+  void setThemeMode(ThemeMode mode) {
+    _themeMode = mode;
     _saveToPrefs();
     notifyListeners();
   }
@@ -23,15 +25,19 @@ class ThemeProvider extends ChangeNotifier {
     _prefs ??= await SharedPreferences.getInstance();
   }
 
-  _loadfromPrefs() async {
+  _loadFromPrefs() async {
     await _initPrefs();
-    _darkTheme = _prefs!.getBool(key) ?? true;
+    final value = _prefs?.getString(key) ?? 'system';
+    _themeMode = ThemeMode.values.firstWhere(
+      (mode) => mode.toString() == 'ThemeMode.$value',
+      orElse: () => ThemeMode.system,
+    );
     notifyListeners();
   }
 
   _saveToPrefs() async {
     await _initPrefs();
-    _prefs!.setBool(key, _darkTheme);
-    notifyListeners();
+    final value = _themeMode.toString().split('.').last;
+    await _prefs?.setString(key, value);
   }
 }

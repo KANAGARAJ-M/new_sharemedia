@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:new_sharemedia/models/message.dart';
+import 'package:new_sharemedia/models/user.dart';
 import 'package:new_sharemedia/utils/firebase.dart';
 
 class ChatService {
-  FirebaseStorage storage = FirebaseStorage.instance;
-
   sendMessage(Message message, String chatId) async {
     //will send message to chats collection with the usersId
     await chatRef.doc("$chatId").collection("messages").add(message.toJson());

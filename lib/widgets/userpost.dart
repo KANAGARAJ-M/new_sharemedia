@@ -33,17 +33,15 @@ class UserPost extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomCard(
       onTap: () {},
-      borderRadius: BorderRadius.circular(10.0),
+      borderRadius: BorderRadius.circular(12.0),
       child: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,
         openBuilder: (BuildContext context, VoidCallback _) {
           return ViewImage(post: post);
         },
         closedElevation: 0.0,
-        closedShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10.0),
-          ),
+        closedShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
         ),
         onClosed: (v) {},
         closedColor: Theme.of(context).cardColor,
@@ -51,129 +49,141 @@ class UserPost extends StatelessWidget {
           return Stack(
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10.0),
-                      topRight: Radius.circular(10.0),
-                    ),
-                    child: CustomImage(
-                      imageUrl: post?.mediaUrl ?? '',
-                      height: 350.0,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 3.0, vertical: 5.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 0.0),
-                          child: Row(
-                            children: [
-                              buildLikeButton(),
-                              SizedBox(width: 5.0),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(10.0),
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    CupertinoPageRoute(
-                                      builder: (_) => Comments(post: post),
-                                    ),
-                                  );
-                                },
-                                child: Icon(
-                                  CupertinoIcons.chat_bubble,
-                                  size: 25.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 5.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Flexible(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 0.0),
-                                child: StreamBuilder(
-                                  stream: likesRef
-                                      .where('postId', isEqualTo: post!.postId)
-                                      .snapshots(),
-                                  builder: (context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (snapshot.hasData) {
-                                      QuerySnapshot snap = snapshot.data!;
-                                      List<DocumentSnapshot> docs = snap.docs;
-                                      return buildLikesCount(
-                                          context, docs.length ?? 0);
-                                    } else {
-                                      return buildLikesCount(context, 0);
-                                    }
-                                  },
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 5.0),
-                            StreamBuilder(
-                              stream: commentRef
-                                  .doc(post!.postId!)
-                                  .collection("comments")
-                                  .snapshots(),
-                              builder: (context,
-                                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (snapshot.hasData) {
-                                  QuerySnapshot snap = snapshot.data!;
-                                  List<DocumentSnapshot> docs = snap.docs;
-                                  return buildCommentsCount(
-                                      context, docs.length ?? 0);
-                                } else {
-                                  return buildCommentsCount(context, 0);
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                        Visibility(
-                          visible: post!.description != null &&
-                              post!.description.toString().isNotEmpty,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 5.0, top: 3.0),
-                            child: Text(
-                              '${post?.description ?? ""}',
-                              style: TextStyle(
-                                color:
-                                    Theme.of(context).textTheme.bodyMedium!.color,
-                                fontSize: 15.0,
-                              ),
-                              maxLines: 2,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 3.0),
-                        Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Text(
-                            timeago.format(post!.timestamp!.toDate()),
-                            style: TextStyle(fontSize: 10.0),
-                          ),
-                        ),
-                        // SizedBox(height: 5.0),
-                      ],
-                    ),
-                  )
+                  buildImage(context),
+                  buildInteractionBar(context),
+                  buildPostDetails(context),
                 ],
               ),
               buildUser(context),
             ],
           );
         },
+      ),
+    );
+  }
+
+  Widget buildImage(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(12.0),
+        topRight: Radius.circular(12.0),
+      ),
+      child: CustomImage(
+        imageUrl: post?.mediaUrl ?? '',
+        height: 350.0,
+        fit: BoxFit.cover,
+        width: double.infinity,
+      ),
+    );
+  }
+
+  Widget buildInteractionBar(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final iconColor = isDark ? Colors.white.withOpacity(0.9) : Colors.black87;
+    final textColor = isDark ? Colors.white.withOpacity(0.8) : Colors.black54;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.black12 : Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: isDark ? Colors.white12 : Colors.black12,
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          buildLikeButton(),
+          SizedBox(width: 16.0),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20.0),
+              onTap: () {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (_) => Comments(post: post),
+                  ),
+                );
+              },
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  CupertinoIcons.chat_bubble,
+                  size: 25.0,
+                  color: iconColor,
+                ),
+              ),
+            ),
+          ),
+          Spacer(),
+          Text(
+            timeago.format(post!.timestamp!.toDate()),
+            style: TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+              color: textColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildPostDetails(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              StreamBuilder(
+                stream: likesRef
+                    .where('postId', isEqualTo: post!.postId)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    QuerySnapshot snap = snapshot.data!;
+                    return buildLikesCount(context, snap.docs.length);
+                  }
+                  return buildLikesCount(context, 0);
+                },
+              ),
+              SizedBox(width: 8.0),
+              StreamBuilder(
+                stream: commentRef
+                    .doc(post!.postId!)
+                    .collection("comments")
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    QuerySnapshot snap = snapshot.data!;
+                    return buildCommentsCount(context, snap.docs.length);
+                  }
+                  return buildCommentsCount(context, 0);
+                },
+              ),
+            ],
+          ),
+          if (post!.description != null && post!.description!.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Text(
+                post!.description!,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -187,32 +197,9 @@ class UserPost extends StatelessWidget {
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           List<QueryDocumentSnapshot> docs = snapshot.data?.docs ?? [];
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          final defaultIconColor = isDark ? Colors.white.withOpacity(0.9) : Colors.black87;
 
-          ///replaced this with an animated like button
-          // return IconButton(
-          //   onPressed: () {
-          //     if (docs.isEmpty) {
-          //       likesRef.add({
-          //         'userId': currentUserId(),
-          //         'postId': post!.postId,
-          //         'dateCreated': Timestamp.now(),
-          //       });
-          //       addLikesToNotification();
-          //     } else {
-          //       likesRef.doc(docs[0].id).delete();
-          //       services.removeLikeFromNotification(
-          //           post!.ownerId!, post!.postId!, currentUserId());
-          //     }
-          //   },
-          //   icon: docs.isEmpty
-          //       ? Icon(
-          //           CupertinoIcons.heart,
-          //         )
-          //       : Icon(
-          //           CupertinoIcons.heart_fill,
-          //           color: Colors.red,
-          //         ),
-          // );
           Future<bool> onLikeButtonTapped(bool isLiked) async {
             if (docs.isEmpty) {
               likesRef.add({
@@ -243,11 +230,7 @@ class UserPost extends StatelessWidget {
             likeBuilder: (bool isLiked) {
               return Icon(
                 docs.isEmpty ? Ionicons.heart_outline : Ionicons.heart,
-                color: docs.isEmpty
-                    ? Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black
-                    : Colors.red,
+                color: docs.isEmpty ? defaultIconColor : Colors.red,
                 size: 25,
               );
             },
@@ -315,7 +298,9 @@ class UserPost extends StatelessWidget {
               child: Container(
                 height: 50.0,
                 decoration: BoxDecoration(
-                  color: Colors.white60,
+                   color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.black54
+                    : Colors.white60,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10.0),
                     topRight: Radius.circular(10.0),
@@ -359,7 +344,9 @@ class UserPost extends StatelessWidget {
                               '${post?.username ?? ""}',
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
-                                color: Colors.black,
+                                color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -368,7 +355,9 @@ class UserPost extends StatelessWidget {
                               '${post?.location ?? 'ShareMedia'}',
                               style: TextStyle(
                                 fontSize: 10.0,
-                                color: Color(0xff4D4D4D),
+                                color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white70
+                                  : Color(0xff4D4D4D),
                               ),
                             ),
                           ],

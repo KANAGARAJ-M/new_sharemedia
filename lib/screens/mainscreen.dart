@@ -67,46 +67,111 @@ class _TabScreenState extends State<TabScreen> {
         },
         child: pages[_page]['page'],
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(width: 5),
-            for (Map item in pages)
-              item['index'] == 2
-                  ? buildFab()
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: IconButton(
-                        icon: Icon(
-                          item['icon'],
-                          color: item['index'] != _page
-                              ? Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black
-                              : Theme.of(context).colorScheme.secondary,
-                          size: 25.0,
-                        ),
-                        onPressed: () => navigationTapped(item['index']),
-                      ),
-                    ),
-            SizedBox(width: 5),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              blurRadius: 10,
+              offset: Offset(0, -5),
+            ),
           ],
+        ),
+        child: BottomAppBar(
+          elevation: 0,
+          child: Container(
+            height: 60,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                for (Map item in pages)
+                  item['index'] == 2
+                      ? _buildEnhancedFab()
+                      : _buildNavItem(item),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  buildFab() {
+  Widget _buildNavItem(Map item) {
+    bool isSelected = item['index'] == _page;
+    return Expanded(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(15),
+          onTap: () => navigationTapped(item['index']),
+          child: Container(
+            height: 62,
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  item['icon'],
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.secondary
+                      : Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white54
+                          : Colors.black54,
+                  size: 24,
+                ),
+                if (isSelected) ...[
+                  SizedBox(height: 2),
+                  Text(
+                    item['title'],
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEnhancedFab() {
     return Container(
-      height: 45.0,
-      width: 45.0,
-      // ignore: missing_required_param
-      child: FabContainer(
-        icon: Ionicons.add_outline,
-        mini: true,
+      width: 60,
+      height: 60,
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.secondary,
+              Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: FabContainer(
+          icon: Ionicons.add_outline,
+          mini: true,
+        ),
       ),
     );
   }

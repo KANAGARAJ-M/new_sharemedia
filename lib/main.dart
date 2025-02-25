@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:new_sharemedia/firebase_options.dart';
+import 'package:new_sharemedia/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:new_sharemedia/components/life_cycle_event_handler.dart';
 import 'package:new_sharemedia/landing/landing_page.dart';
@@ -19,6 +20,8 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.android,
     );
+     final notificationService = NotificationService();
+  await notificationService.initialize();
   } catch (e) {
     print('Error initializing Firebase: $e');
     // Handle initialization error gracefully, if needed
@@ -55,9 +58,9 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             title: Constants.appName,
             debugShowCheckedModeBanner: false,
-            theme: themeData(
-              notifier.dark ? Constants.darkTheme : Constants.lightTheme,
-            ),
+            themeMode: notifier.themeMode,
+          theme: Constants.lightTheme,
+          darkTheme: Constants.darkTheme,
             home: StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: ((BuildContext context, snapshot) {

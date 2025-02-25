@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:new_sharemedia/models/user.dart';
 import 'package:new_sharemedia/screens/view_image.dart';
 import 'package:new_sharemedia/services/services.dart';
 import 'package:new_sharemedia/utils/firebase.dart';
 import 'package:uuid/uuid.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class PostService extends Service {
   String postId = Uuid().v4();
@@ -36,7 +39,7 @@ class PostService extends Service {
       "ownerId": firebaseAuth.currentUser!.uid,
       "mediaUrl": link,
       "description": description ?? "",
-      "location": location ?? "ShareMedia",
+      "location": location ?? "Unknown",
       "timestamp": Timestamp.now(),
     }).catchError((e) {
       print(e);
@@ -100,6 +103,23 @@ class PostService extends Service {
       "mediaUrl": mediaUrl,
       "timestamp": Timestamp.now(),
     });
+
+    // Add FCM notification
+    DocumentSnapshot userDoc = await usersRef.doc(ownerId).get();
+    UserModel postOwner = UserModel.fromJson(userDoc.data() as Map<String, dynamic>);
+    
+    if (postOwner.token != null) {
+      await FirebaseMessaging.instance.sendMessage(
+        to: postOwner.token!,
+        data: {
+          'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+          'type': 'like',
+          'postId': postId,
+          'title': '$username liked your post',
+          'body': 'Tap to view the post',
+        },
+      );
+    }
   }
 
   //remove likes from notification

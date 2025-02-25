@@ -10,6 +10,8 @@ class UserModel {
   Timestamp? signedUpAt;
   Timestamp? lastSeen;
   bool? isOnline;
+  bool isPrivate;
+  String? token;
 
   UserModel(
       {this.username,
@@ -20,9 +22,12 @@ class UserModel {
       this.isOnline,
       this.lastSeen,
       this.bio,
-      this.country});
+      this.country,
+      this.isPrivate = false,
+      this.token});
 
-  UserModel.fromJson(Map<String, dynamic> json) {
+  UserModel.fromJson(Map<String, dynamic> json)
+      : isPrivate = json['isPrivate'] ?? false {
     username = json['username'];
     email = json['email'];
     country = json['country'];
@@ -32,6 +37,7 @@ class UserModel {
     lastSeen = json['lastSeen'];
     bio = json['bio'];
     id = json['id'];
+    token = json['token'];
   }
 
   Map<String, dynamic> toJson() {
@@ -45,6 +51,8 @@ class UserModel {
     data['isOnline'] = this.isOnline;
     data['lastSeen'] = this.lastSeen;
     data['id'] = this.id;
+    data['isPrivate'] = this.isPrivate;
+    data['token'] = this.token;
     return data;
   }
 }

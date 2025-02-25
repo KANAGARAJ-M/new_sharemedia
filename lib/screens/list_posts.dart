@@ -23,33 +23,41 @@ class _ListPostsState extends State<ListPosts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          child: Icon(Ionicons.chevron_back),
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        leading: IconButton(
+          icon: Icon(Ionicons.chevron_back, size: 30),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Column(
           children: [
             Text(
               widget.username.toUpperCase(),
               style: TextStyle(
-                fontSize: 12.0,
+                fontSize: 13.0,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey,
+                color: Theme.of(context).textTheme.bodySmall?.color,
+                letterSpacing: 1.0,
               ),
             ),
             Text(
               'Posts',
               style: TextStyle(
-                fontSize: 18.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
           ],
         ),
+        centerTitle: true,
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
         child: FutureBuilder(
           future: postRef
               .where('ownerId', isEqualTo: widget.userId)
@@ -59,31 +67,62 @@ class _ListPostsState extends State<ListPosts> {
             if (snapshot.hasData) {
               var snap = snapshot.data;
               List docs = snap!.docs;
-              return ListView.builder(
-                itemCount: docs.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  PostModel posts = PostModel.fromJson(docs[index].data());
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: UserPost(post: posts),
+              return docs.isEmpty 
+                ? _buildEmptyState()
+                : ListView.builder(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    itemCount: docs.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      PostModel posts = PostModel.fromJson(docs[index].data());
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 5.0,
+                        ),
+                        child: UserPost(post: posts),
+                      );
+                    },
                   );
-                },
-              );
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return circularProgress(context);
-            } else
-              return Center(
-                child: Text(
-                  'No Feeds',
-                  style: TextStyle(
-                    fontSize: 26.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              );
+            } else {
+              return _buildEmptyState();
+            }
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Ionicons.documents_outline,
+            size: 60,
+            color: Theme.of(context).textTheme.bodySmall?.color,
+          ),
+          SizedBox(height: 10),
+          Text(
+            'No Posts Yet',
+            style: TextStyle(
+              fontSize: 26.0,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            'Posts will appear here',
+            style: TextStyle(
+              fontSize: 16.0,
+              color: Theme.of(context).textTheme.bodySmall?.color,
+            ),
+          ),
+        ],
       ),
     );
   }
