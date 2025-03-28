@@ -86,18 +86,18 @@ class FabContainer extends StatelessWidget {
                   );
                 },
               ),
-              ListTile(
-                leading: Icon(
-                  CupertinoIcons.camera_on_rectangle,
-                  size: 25.0,
-                ),
-                title: Text('Add to story'),
-                onTap: () async {
-                  // Navigator.pop(context);
-                  await viewModel.pickImage(context: context);
+              // ListTile(
+              //   leading: Icon(
+              //     CupertinoIcons.camera_on_rectangle,
+              //     size: 25.0,
+              //   ),
+              //   title: Text('Add to story'),
+              //   onTap: () async {
+              //     // Navigator.pop(context);
+              //     await viewModel.pickImage(context: context);
 
-                },
-              ),
+              //   },
+              // ),
             ],
           ),
         );

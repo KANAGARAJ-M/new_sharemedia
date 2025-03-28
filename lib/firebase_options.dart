@@ -54,10 +54,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCl45OiqgOc1xxezoxAjPPI1HeDfU8p-_A',
-    appId: '1:391674684432:android:37bcc6a8f0acae852f5695',
+    appId: '1:391674684432:android:f9e6a2c88fb68d822f5695',
     messagingSenderId: '391674684432',
     projectId: 'sharemedia-kaizendeveloper',
     databaseURL: 'https://sharemedia-kaizendeveloper-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'sharemedia-kaizendeveloper.appspot.com',
   );
+
 }

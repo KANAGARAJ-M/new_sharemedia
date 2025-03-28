@@ -61,7 +61,7 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'ShareMedia',
+          'Wavora',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20.0,
@@ -150,14 +150,10 @@ class _ProfileState extends State<Profile> {
                               children: [
                                 SizedBox(height: 32.0),
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Visibility(
-                                      visible: false,
-                                      child: SizedBox(width: 10.0),
-                                    ),
                                     Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           width: 130.0,
@@ -183,49 +179,42 @@ class _ProfileState extends State<Profile> {
                                           ),
                                         ),
                                         SizedBox(width: 10.0),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              user.email!,
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                              ),
-                                            ),
-                                          ],
+                                        Text(
+                                          user.email!,
+                                          style: TextStyle(
+                                            fontSize: 10.0,
+                                          ),
                                         ),
                                       ],
                                     ),
-                                    widget.profileId == currentUserId()
-                                        ? InkWell(
-                                            onTap: () {
-                                              Navigator.of(context).push(
-                                                CupertinoPageRoute(
-                                                  builder: (_) => Setting(),
-                                                ),
-                                              );
-                                            },
-                                            child: Column(
-                                              children: [
-                                                Icon(
-                                                  Ionicons.settings_outline,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                ),
-                                                Text(
-                                                  'settings',
-                                                  style: TextStyle(
-                                                    fontSize: 11.5,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        : const Text('')
-                                    // : buildLikeButton()
+                                    if (widget.profileId == currentUserId())
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 1.0),
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              CupertinoPageRoute(
+                                                builder: (_) => Setting(),
+                                              ),
+                                            );
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Icon(
+                                                Ionicons.settings_outline,
+                                                color: Theme.of(context).colorScheme.secondary,
+                                                size: 24.0,
+                                              ),
+                                              // Text(
+                                              //   'settings',
+                                              //   style: TextStyle(
+                                              //     fontSize: 11.5,
+                                              //   ),
+                                              // )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                   ],
                                 ),
                               ],

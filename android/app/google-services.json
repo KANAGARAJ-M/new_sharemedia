@@ -37,6 +37,64 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:391674684432:android:f9e6a2c88fb68d822f5695",
+        "android_client_info": {
+          "package_name": "org.nocorps.Wavora"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "391674684432-g4k3u7s4huqid5ac5gm9e2k0sogd9v19.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl45OiqgOc1xxezoxAjPPI1HeDfU8p-_A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "391674684432-g4k3u7s4huqid5ac5gm9e2k0sogd9v19.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:391674684432:android:9db20d9413e7f12f2f5695",
+        "android_client_info": {
+          "package_name": "org.nocorps.sharemedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "391674684432-g4k3u7s4huqid5ac5gm9e2k0sogd9v19.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl45OiqgOc1xxezoxAjPPI1HeDfU8p-_A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "391674684432-g4k3u7s4huqid5ac5gm9e2k0sogd9v19.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:391674684432:android:387b0aa30479e9eb2f5695",
         "android_client_info": {
           "package_name": "sharemedia.kaizen.com"

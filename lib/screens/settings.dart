@@ -6,6 +6,7 @@ import 'package:new_sharemedia/view_models/theme/theme_view_model.dart';
 import 'package:new_sharemedia/screens/edit_profile.dart'; // Import needed screens
 import 'package:new_sharemedia/utils/firebase.dart';
 import 'package:new_sharemedia/models/user.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Setting extends StatefulWidget {
   @override
@@ -85,6 +86,23 @@ class _SettingState extends State<Setting> {
       emailNotifications = value;  
     });
     // TODO: Update email notification settings in backend
+  }
+
+  // Add this method to launch URL
+  Future<void> _launchURL(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: const WebViewConfiguration(
+        enableJavaScript: true,
+        enableDomStorage: true,
+      ),
+    )) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not launch $urlString')),
+      );
+    }
   }
 
   @override
@@ -285,18 +303,21 @@ class _SettingState extends State<Setting> {
             title: Text("Terms of Service"),
             leading: Icon(Icons.description_outlined),
             trailing: Icon(Icons.chevron_right),
-            onTap: () {
-              // Navigate to terms of service
-            },
+            onTap: () => _launchURL('https://nocorps.org/android/app/Wavora/Terms-and-Condition'),
           ),
           Divider(height: 0),
           ListTile(
             title: Text("Privacy Policy"),
             leading: Icon(Icons.privacy_tip_outlined),
             trailing: Icon(Icons.chevron_right),
-            onTap: () {
-              // Navigate to privacy policy
-            },
+            onTap: () => _launchURL('https://nocorps.org/android/app/Wavora/Privacy-Policy'),
+          ),
+          Divider(height: 0),
+          ListTile(
+            title: Text("Delete Account"),
+            leading: Icon(Icons.privacy_tip_outlined),
+            trailing: Icon(Icons.chevron_right),
+            onTap: () => _launchURL('https://nocorps.org/remove-account'),
           ),
         ],
       ),

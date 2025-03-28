@@ -88,4 +88,4 @@ class _MyAppState extends State<MyApp> {
 
 
 ///flutter pub run change_app_package_name:main sharemedia.kaizen.com
-///flutter pub run change_app_package_name:main mskp.tamilanproject.sharemediapro.xyz
+///flutter pub run change_app_package_name:main org.nocorps.Wavora

@@ -1,4 +1,4 @@
-package mskp.tamilanproject.sharemediapro.xyz
+package org.nocorps.Wavora
 
 import io.flutter.embedding.android.FlutterActivity
 

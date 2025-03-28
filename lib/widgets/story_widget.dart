@@ -2,171 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_sharemedia/models/status.dart';
-// import 'package:new_sharemedia/models/status.dart';
-// import 'package:new_sharemedia/models/user.dart';
-// import 'package:new_sharemedia/posts/story/status_view.dart';
-// import 'package:new_sharemedia/utils/firebase.dart';
-// import 'package:new_sharemedia/widgets/indicators.dart';
-
-// class StoryWidget extends StatelessWidget {
-//   const StoryWidget({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: 100.0,
-//       child: Padding(
-//         padding: const EdgeInsets.only(left: 5.0),
-//         child: StreamBuilder<QuerySnapshot>(
-//           stream: userChatsStream('${firebaseAuth.currentUser!.uid}'),
-//           builder: (context, snapshot) {
-//             if (snapshot.hasData) {
-//               List chatList = snapshot.data!.docs;
-//               if (chatList.isNotEmpty) {
-//                 return ListView.builder(
-//                   padding: const EdgeInsets.symmetric(vertical: 5.0),
-//                   itemCount: chatList.length,
-//                   scrollDirection: Axis.horizontal,
-//                   physics: AlwaysScrollableScrollPhysics(),
-//                   itemBuilder: (BuildContext context, int index) {
-//                     DocumentSnapshot statusListSnapshot = chatList[index];
-//                     return StreamBuilder<QuerySnapshot>(
-//                       stream: messageListStream(statusListSnapshot.id),
-//                       builder: (context, snapshot) {
-//                         if (snapshot.hasData) {
-//                           List statuses = snapshot.data!.docs;
-//                           StatusModel status = StatusModel.fromJson(
-//                             statuses.first.data(),
-//                           );
-//                           List users = statusListSnapshot.get('whoCanSee');
-//                           // remove the current user's id from the Users
-//                           // list so we can get the rest of the user's id
-//                           users.remove('${firebaseAuth.currentUser!.uid}');
-//                           return _buildStatusAvatar(
-//                               statusListSnapshot.get('userId'),
-//                               statusListSnapshot.id,
-//                               status.statusId!,
-//                               index);
-//                         } else {
-//                           return const SizedBox();
-//                         }
-//                       },
-//                     );
-//                   },
-//                 );
-//               } else {
-//                 return Center(
-//                   child: Text(
-//                     'No Status',
-//                   ),
-//                 );
-//               }
-//             } else {
-//               return circularProgress(context);
-//             }
-//           },
-//         ),
-//       ),
-//     );
-//   }
-
-//   _buildStatusAvatar(
-//     String userId,
-//     String chatId,
-//     String messageId,
-//     int index,
-//   ) {
-//     return StreamBuilder(
-//       stream: usersRef.doc('$userId').snapshots(),
-//       builder: (context, snapshot) {
-//         if (snapshot.hasData) {
-//           DocumentSnapshot documentSnapshot =
-//               snapshot.data as DocumentSnapshot<Object?>;
-//           UserModel user = UserModel.fromJson(
-//             documentSnapshot.data() as Map<String, dynamic>,
-//           );
-//           return Padding(
-//             padding: const EdgeInsets.only(right: 10.0),
-//             child: Column(
-//               children: [
-//                 InkWell(
-//                   onTap: () {
-//                     Navigator.of(context).push(
-//                       MaterialPageRoute(
-//                         builder: (_) => StatusScreen(
-//                           statusId: chatId,
-//                           storyId: messageId,
-//                           initPage: index,
-//                           userId: userId,
-//                         ),
-//                       ),
-//                     );
-//                   },
-//                   child: Container(
-//                     decoration: BoxDecoration(
-//                       color: Theme.of(context).colorScheme.secondary,
-//                       shape: BoxShape.circle,
-//                       border: Border.all(
-//                         color: Colors.transparent,
-//                       ),
-//                       boxShadow: [
-//                         BoxShadow(
-//                           color: Colors.grey.withOpacity(0.3),
-//                           offset: new Offset(0.0, 0.0),
-//                           blurRadius: 2.0,
-//                           spreadRadius: 0.0,
-//                         ),
-//                       ],
-//                     ),
-//                     child: Padding(
-//                       padding: const EdgeInsets.all(1.0),
-//                       child: CircleAvatar(
-//                         radius: 35.0,
-//                         backgroundColor: Colors.grey,
-//                         backgroundImage: CachedNetworkImageProvider(
-//                           user.photoUrl!,
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 Text(
-//                   user.username!,
-//                   style: TextStyle(
-//                     fontSize: 10.0,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 )
-//               ],
-//             ),
-//           );
-//         } else {
-//           return const SizedBox();
-//         }
-//       },
-//     );
-//   }
-
-//   Stream<QuerySnapshot> userChatsStream(String uid) {
-//     return statusRef.where('whoCanSee', arrayContains: '$uid').snapshots();
-//   }
-
-//   Stream<QuerySnapshot> messageListStream(String documentId) {
-//     return statusRef.doc(documentId).collection('statuses').snapshots();
-//   }
-// }
-
-
-
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:new_sharemedia/models/status.dart';
 import 'package:new_sharemedia/models/user.dart';
 import 'package:new_sharemedia/posts/story/status_view.dart';
 import 'package:new_sharemedia/utils/firebase.dart';
 import 'package:new_sharemedia/widgets/indicators.dart';
+import 'package:shimmer/shimmer.dart';
 
 class StoryWidget extends StatelessWidget {
   const StoryWidget({Key? key}) : super(key: key);
@@ -195,15 +35,21 @@ class StoryWidget extends StatelessWidget {
               );
             }
 
-            return ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 5.0),
-              itemCount: chatList.length,
-              scrollDirection: Axis.horizontal,
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                final statusListSnapshot = chatList[index];
-                return _buildStatusStream(statusListSnapshot, index);
+            return RefreshIndicator(
+              onRefresh: () async {
+                // Implement refresh logic
+                await Future.delayed(Duration(seconds: 1));
               },
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                itemCount: chatList.length,
+                scrollDirection: Axis.horizontal,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  final statusListSnapshot = chatList[index];
+                  return _buildStatusStream(statusListSnapshot, index);
+                },
+              ),
             );
           },
         ),
@@ -263,15 +109,12 @@ class StoryWidget extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => StatusScreen(
-                        statusId: chatId,
-                        storyId: messageId,
-                        initPage: index,
-                        userId: userId,
-                      ),
-                    ),
+                  navigateToStatus(
+                    context,
+                    chatId: chatId,
+                    messageId: messageId,
+                    index: index,
+                    userId: userId,
                   );
                 },
                 child: Container(
@@ -322,5 +165,44 @@ class StoryWidget extends StatelessWidget {
 
   Stream<QuerySnapshot> messageListStream(String documentId) {
     return statusRef.doc(documentId).collection('statuses').snapshots();
+  }
+
+  Widget _buildLoadingShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+}
+
+void navigateToStatus(BuildContext context, {
+  required String chatId,
+  required String messageId,
+  required int index,
+  required String userId,
+}) {
+  try {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => StatusScreen(
+          statusId: chatId,
+          storyId: messageId,
+          initPage: index,
+          userId: userId,
+        ),
+      ),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Unable to open status: $e')),
+    );
   }
 }

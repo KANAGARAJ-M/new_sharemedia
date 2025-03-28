@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class Constants {
   //App related strings
-  static String appName = "ShareMedia";
+  static String appName = "Wavora";
 
   //Colors for theme
   static Color lightPrimary = Color(0xfff3f4f9);

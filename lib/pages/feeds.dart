@@ -106,11 +106,11 @@ class _FeedsState extends State<Feeds> with AutomaticKeepAliveClientMixin {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AnimatedContainer(
-                duration: Duration(milliseconds: 200),
-                height: showStory ? null : 0,
-                child: showStory ? StoryWidget() : Container(),
-              ),
+              // AnimatedContainer(
+              //   duration: Duration(milliseconds: 200),
+              //   height: showStory ? null : 0,
+              //   child: showStory ? StoryWidget() : Container(),
+              // ),
               Container(
                 height: MediaQuery.of(context).size.height,
                 child: FutureBuilder(

@@ -80,8 +80,8 @@ class _TabScreenState extends State<TabScreen> {
         child: BottomAppBar(
           elevation: 0,
           child: Container(
-            height: 60,
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            height: 50, // Reduced from 60
+            padding: EdgeInsets.symmetric(horizontal: 8), // Reduced horizontal padding
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,11 +105,11 @@ class _TabScreenState extends State<TabScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(12),
           onTap: () => navigationTapped(item['index']),
           child: Container(
-            height: 62,
-            padding: EdgeInsets.symmetric(vertical: 8),
+            height: 45, // Reduced from 62
+            padding: EdgeInsets.symmetric(vertical: 4), // Reduced from 8
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -121,14 +121,14 @@ class _TabScreenState extends State<TabScreen> {
                       : Theme.of(context).brightness == Brightness.dark
                           ? Colors.white54
                           : Colors.black54,
-                  size: 24,
+                  size: 20, // Reduced from 24
                 ),
                 if (isSelected) ...[
-                  SizedBox(height: 2),
+                  SizedBox(height: 1), // Reduced from 2
                   Text(
                     item['title'],
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 10, // Reduced from 11
                       color: Theme.of(context).colorScheme.secondary,
                       fontWeight: FontWeight.w600,
                     ),
@@ -146,9 +146,9 @@ class _TabScreenState extends State<TabScreen> {
 
   Widget _buildEnhancedFab() {
     return Container(
-      width: 60,
-      height: 60,
-      padding: EdgeInsets.symmetric(vertical: 8),
+      width: 45, // Reduced from 60
+      height: 45, // Reduced from 60
+      padding: EdgeInsets.symmetric(vertical: 4), // Reduced from 8
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -159,12 +159,12 @@ class _TabScreenState extends State<TabScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10), // Reduced from 12
           boxShadow: [
             BoxShadow(
               color: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
-              blurRadius: 8,
-              offset: Offset(0, 4),
+              blurRadius: 6, // Reduced from 8
+              offset: Offset(0, 3), // Reduced from 4
             ),
           ],
         ),

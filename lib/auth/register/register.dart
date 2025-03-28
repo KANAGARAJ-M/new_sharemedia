@@ -30,7 +30,9 @@ class _RegisterState extends State<Register> {
           children: [
             SizedBox(height: MediaQuery.of(context).size.height / 10),
             Text(
-              'Welcome to ShareMedia\nCreate a new account and connect with friends',
+              // 'Welcome to ShareMedia\nCreate a new account and connect with friends',
+              'Register your free account',
+              textAlign: TextAlign.center,
               style: GoogleFonts.nunitoSans(
                 fontWeight: FontWeight.bold,
                 fontSize: 25.0,
